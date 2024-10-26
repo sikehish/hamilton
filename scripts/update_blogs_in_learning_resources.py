@@ -1,3 +1,8 @@
+"""
+This script fetches articles from the DAGWorks blog archive and updates the README file with the latest blog posts.
+Before running this script, make sure to install the required packages by running:
+pip install -r update_blogs_requirements.txt
+"""
 import time
 from datetime import datetime
 from bs4 import BeautifulSoup
