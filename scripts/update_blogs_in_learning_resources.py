@@ -1,7 +1,35 @@
 """
-This script fetches articles from the DAGWorks blog archive and updates the README file with the latest blog posts.
+📜 DAGWorks Blog Archive Updater Script
+
+This script fetches articles from the DAGWorks blog archive and updates the README with the latest posts.
+It supports filtering articles based on a cutoff date and offers an option to print articles to the console for review.
+
 Before running this script, make sure to install the required packages by running:
 pip install -r update_blogs_requirements.txt
+
+Usage:
+    1. Specify a cutoff date and update the README:
+        python update_blogs.py --date 2024-10-01
+
+    2. Print articles to the console (without updating README):
+        python update_blogs.py --date 2024-10-01 --print
+
+    3. Run interactively (no arguments required):
+        python update_blogs.py
+
+Arguments:
+    --date YYYY-MM-DD : Optional. Fetches articles published on or after the given date.
+    --print           : Optional. Prints fetched articles to the console without modifying the README.
+
+Dependencies:
+    - selenium: For web scraping.
+    - webdriver-manager: Manages ChromeDriver installation.
+    - beautifulsoup4: Parses HTML content.
+    - prompt_toolkit: Enables interactive user input from the command line.
+
+Notes:
+    - Ensure Google Chrome is installed since the script uses it for scraping.
+    - The README file must be present in the same directory as this script.
 """
 
 import argparse
@@ -137,7 +165,6 @@ def update_readme(articles):
 
 def main():
     url = "https://blog.dagworks.io/archive"
-    import argparse
 
     parser = argparse.ArgumentParser(
         description="📜 Fetch and update articles from the DAGWorks blog archive.",
@@ -156,31 +183,33 @@ def main():
     3. Run interactively (without --date) and choose a date via prompt:
         python update_blogs_in_learning_resources.py
         """,
-        formatter_class=argparse.RawTextHelpFormatter  # Preserve newlines and formatting
+        formatter_class=argparse.RawTextHelpFormatter,  # Preserve newlines and formatting
     )
 
     parser.add_argument(
-        "--date", 
-        type=str, 
-        metavar="YYYY-MM-DD",  
+        "--date",
+        type=str,
+        metavar="YYYY-MM-DD",
         help=(
             "Cutoff date to filter articles (e.g., 2024-10-01). "
             "If not provided, you will be prompted to enter a date during execution."
-        )
+        ),
     )
 
     parser.add_argument(
-        "--print", 
-        action='store_true', 
+        "--print",
+        action="store_true",
         help=(
             "Print the fetched articles to the console instead of updating the README. "
             "Useful for reviewing articles before making changes."
-        )
+        ),
     )
 
     args = parser.parse_args()
 
-    cutoff_date =  datetime.strptime(args.date, "%Y-%m-%d").date() if args.date else get_cutoff_date()
+    cutoff_date = (
+        datetime.strptime(args.date, "%Y-%m-%d").date() if args.date else get_cutoff_date()
+    )
 
     print(f"\n🔍 Fetching articles published after {cutoff_date}...\n")
     articles = fetch_articles(url, cutoff_date)
