@@ -69,7 +69,6 @@ def fetch_articles(url, cutoff_date):
 
         if article_date >= cutoff_date:
             articles.append((link, text, article_date))
-            print(f"{len(articles)}: Link: {link}, Text: {text}, Date: {article_date}")
 
     return articles
 
@@ -88,6 +87,16 @@ def get_cutoff_date():
     except ValueError:
         print("Invalid date format. Please use YYYY-MM-DD.")
         return get_cutoff_date()
+
+
+def print_articles(articles):
+    """Prints articles to the console."""
+    print("\n📰 Articles:\n")
+    for link, text, date in articles:
+        if date:
+            print(f"* {date} - {text}: {link}")
+        else:
+            print(f"* {text}: {link}")
 
 
 def update_readme(articles):
@@ -129,20 +138,22 @@ def update_readme(articles):
 def main():
     url = "https://blog.dagworks.io/archive"
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--date", type=str, help="Cutoff date in YYYY-MM-DD format (e.g., 2024-10-01)"
-    )
+    parser.add_argument("--date", type=str, help="Cutoff date in YYYY-MM-DD format (e.g., 2024-10-01)")
+    parser.add_argument("--print", action='store_true', help="Print the articles to the console")
+
     args = parser.parse_args()
 
-    cutoff_date = (
-        datetime.strptime(args.date, "%Y-%m-%d").date() if args.date else get_cutoff_date()
-    )
+    cutoff_date =  datetime.strptime(args.date, "%Y-%m-%d").date() if args.date else get_cutoff_date()
 
     print(f"\n🔍 Fetching articles published after {cutoff_date}...\n")
     articles = fetch_articles(url, cutoff_date)
 
+    if args.print:
+        print_articles(articles)
+    else:
+        update_readme(articles)
+
     print(f"\n✅ Total Articles Fetched: {len(articles)}")
-    update_readme(articles)
 
 
 if __name__ == "__main__":
