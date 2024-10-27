@@ -137,9 +137,46 @@ def update_readme(articles):
 
 def main():
     url = "https://blog.dagworks.io/archive"
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--date", type=str, help="Cutoff date in YYYY-MM-DD format (e.g., 2024-10-01)")
-    parser.add_argument("--print", action='store_true', help="Print the articles to the console")
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="📜 Fetch and update articles from the DAGWorks blog archive.",
+        epilog="""
+    ✨ Tip:
+    - Use --date to specify a cutoff date to filter articles (default: prompt input).
+    - Use --print to display fetched articles directly in the console.
+
+    Examples:
+    1. Fetch articles after a specific date and update README:
+        python update_blogs_in_learning_resources.py --date 2024-10-01
+
+    2. Print articles to the console without modifying the README:
+        python update_blogs_in_learning_resources.py --date 2024-10-01 --print
+
+    3. Run interactively (without --date) and choose a date via prompt:
+        python update_blogs_in_learning_resources.py
+        """,
+        formatter_class=argparse.RawTextHelpFormatter  # Preserve newlines and formatting
+    )
+
+    parser.add_argument(
+        "--date", 
+        type=str, 
+        metavar="YYYY-MM-DD",  
+        help=(
+            "Cutoff date to filter articles (e.g., 2024-10-01). "
+            "If not provided, you will be prompted to enter a date during execution."
+        )
+    )
+
+    parser.add_argument(
+        "--print", 
+        action='store_true', 
+        help=(
+            "Print the fetched articles to the console instead of updating the README. "
+            "Useful for reviewing articles before making changes."
+        )
+    )
 
     args = parser.parse_args()
 
