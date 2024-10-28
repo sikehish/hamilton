@@ -9,13 +9,13 @@ pip install -r update_blogs_requirements.txt
 
 Usage:
     1. Specify a cutoff date and update the README:
-        python update_blogs.py --date 2024-10-01
+        python update_blogs_in_learning_resources.py --date 2024-10-01
 
     2. Print articles to the console (without updating README):
-        python update_blogs.py --date 2024-10-01 --print
+        python update_blogs_in_learning_resources.py --date 2024-10-01 --print
 
     3. Run interactively (no arguments required):
-        python update_blogs.py
+        python update_blogs_in_learning_resources.py
 
 Arguments:
     --date YYYY-MM-DD : Optional. Fetches articles published on or after the given date.
@@ -88,13 +88,12 @@ def fetch_articles(url, cutoff_date):
             None,
         ),
     ]
-    for i, (anchor, time_el) in enumerate(zip(anchors, timeEls)):
+    for _i, (anchor, time_el) in enumerate(zip(anchors, timeEls)):
         link = anchor["href"]
         text = anchor.get_text()
 
         date_str = time_el["datetime"]
         article_date = datetime.fromisoformat(date_str.replace("Z", "+00:00")).date()
-
         if article_date >= cutoff_date:
             articles.append((link, text, article_date))
 
